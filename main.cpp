@@ -18,7 +18,7 @@ int main()
 		cout<<"0. Salir"<<endl;
 		cout<<"Seleccione una opcion: ";
 		cin>>opcion;
-        system("cls");
+		system("cls");
 		switch(opcion)
 		{
 			case 1:
@@ -38,6 +38,7 @@ int main()
 
 void creditos()
 {
+	system("cls");
     cout<<"ESTE CODIGO FUE REALIZADO POR LOS ESTUDIANTES DE INGENIERIA DE SISTEMAS"<<endl;
     cout<<"NESTOR CAÑAVERAL - LOPEZ FONTALVO"<<endl;
     cout<<"DE LA UNIVERSIDAD DE CARTAGENA PARA EL CURSO DE SIMULACION DIGITAL"<<endl;

@@ -8,10 +8,12 @@ ifeq ($(OS),Windows_NT)
 	MKDIR = powershell -Command "if (!(Test-Path '$(BUILD_DIR)')) { New-Item -ItemType Directory -Path '$(BUILD_DIR)' }"
 	RM = cmd.exe /c "for %f in ($(BUILD_DIR)\*.o) do del %f"
 	RMDIR = cmd.exe /c rmdir /S /Q
+	REXE = cmd.exe /c "del /f pseudorandom_numbers.exe"
 else
 	MKDIR = mkdir -p $(BUILD_DIR)
 	RM = rm -f
 	RMDIR = rm -rf
+	REXE = rm -f pseudorandom_numbers.exe
 endif
 
 pseudorandom_numbers: $(BUILD_DIR)/main.o $(BUILD_DIR)/Generadores.o $(BUILD_DIR)/Pruebas.o
@@ -31,7 +33,5 @@ $(BUILD_DIR):
 
 clean:
 	$(RM)
-	$(RM) pseudorandom_numbers
 	$(RMDIR) $(BUILD_DIR)
-
-
+	$(REXE)

@@ -3,12 +3,13 @@
 #include <string>
 #include <fstream>
 #include <cmath>
+#include <cstdint>
 using namespace std;
 
 void congruencial_aditivo();
 void congruencial_multiplicativo();
 void congruencial_mixto();
-void lehmer();
+void tausworthe();
 void parte_central();
 void archivo(double numeros[], int iniciales, int n);
 void cambiar_cifras();
@@ -24,7 +25,7 @@ void menuGeneradores()
 		cout<<"1. Congruencial aditivo"<<endl;
 		cout<<"2. Congruencial multiplicativo"<<endl;
 		cout<<"3. Congruencial mixto"<<endl;
-		cout<<"4. Metodo de lehmer"<<endl;
+		cout<<"4. Metodo de tausworthe"<<endl;
 		cout<<"5. Metodo de la parte central del cuadrado"<<endl;
 		cout<<"6. Cambiar numero de cifras significativas (actual: "<<cifras_significativas<<")"<<endl;
 		cout<<"0. Salir"<<endl;
@@ -43,7 +44,7 @@ void menuGeneradores()
 				congruencial_mixto();
 				break;
 			case 4:
-				lehmer();
+				tausworthe();
 				break;
 			case 5:
 				parte_central();
@@ -61,12 +62,14 @@ void congruencial_aditivo()
 {
 	int k, n, modulo;
 	double cifras = pow(10, cifras_significativas);
-    cout<<"Ingrese el numero de numeros iniciales: ";
-    cin>>k;
-    cout<<"Ingrese la cantidad de numeros a generar: ";
+	cout<<"Ingrese la cantidad de numeros a generar: ";
     cin>>n;
     double listaAleatorios[n];
     int numeros[n + k];
+	cout<<"Ingrese el modulo: ";
+	cin>>modulo;
+    cout<<"Ingrese el numero de numeros iniciales: ";
+    cin>>k;
     
     for(int i=0; i<k; i++)
     {
@@ -74,9 +77,6 @@ void congruencial_aditivo()
     	cin>>numeros[i];
 	}
 	
-	cout<<"Ingrese el modulo: ";
-	cin>>modulo;
-    
     for(int i=0; i<n; i++)
     {
     	numeros[k] = (numeros[i] + numeros[k-1]) % modulo;
@@ -89,55 +89,75 @@ void congruencial_aditivo()
 
 void congruencial_multiplicativo()
 {
-	int multi, modulo, n;
+	int multi, modulo, n, semilla;
 	double cifras = pow(10, cifras_significativas);
 	cout<<"Ingrese la cantidad de numeros a generar: ";
     cin>>n;
     double listaAleatorios[n];
-    int numeros[n+1];
     cout<<"Ingrese la constante multiplicativa: ";
     cin>>multi;
     cout<<"Ingrese la semilla: ";
-    cin>>numeros[0];
+    cin>>semilla;
     cout<<"Ingrese el modulo: ";
     cin>>modulo;
     
     for(int i=0; i<n; i++)
     {
-    	numeros[i+1] = (numeros[i] * multi) % modulo;
-    	listaAleatorios[i] = round(((double) numeros[i+1] / (modulo-1)) * cifras) / cifras;
+    	semilla = (semilla * multi) % modulo;
+    	listaAleatorios[i] = round(((double) semilla / (modulo-1)) * cifras) / cifras;
 		cout<<"Numero #"<<i+1<<" generado: "<<listaAleatorios[i]<<endl;
 	}
+	archivo(listaAleatorios, 0, n);
 }
 
 void congruencial_mixto()
 {
-	int multi, aditi, modulo, n;
+	int multi, aditi, modulo, n, semilla;
 	double cifras = pow(10, cifras_significativas);
 	cout<<"Ingrese la cantidad de numeros a generar: ";
     cin>>n;
     double listaAleatorios[n];
-    int numeros[n+1];
     cout<<"Ingrese la constante multiplicativa: ";
     cin>>multi;
     cout<<"Ingrese la constante aditiva: ";
     cin>>aditi;
     cout<<"Ingrese la semilla: ";
-    cin>>numeros[0];
+    cin>>semilla;
     cout<<"Ingrese el modulo: ";
     cin>>modulo;
     
     for(int i=0; i<n; i++)
     {
-    	numeros[i+1] = ((numeros[i] * multi) + aditi) % modulo;
-    	listaAleatorios[i] = round(((double) numeros[i+1] / modulo) * cifras) / cifras;
+    	semilla = ((semilla * multi) + aditi) % modulo;
+    	listaAleatorios[i] = round(((double) semilla / modulo) * cifras) / cifras;
 		cout<<"Numero #"<<i+1<<" generado: "<<listaAleatorios[i]<<endl;
 	}
+	archivo(listaAleatorios, 0, n);
 }
 
-void lehmer()
+void tausworthe()
 {
-	
+	int longitud, nbits, n, semilla;
+	double cifras = pow(10, cifras_significativas);
+	cout<<"Ingrese la cantidad de numeros a generar: ";
+    cin>>n;
+    double listaAleatorios[n];
+    cout<<"Ingrese la longitud de la relacion de recurrencia: ";
+    cin>>longitud;
+    cout<<"Ingrese el numero de bits de la secuencia: ";
+    cin>>nbits;
+    cout<<"Ingrese la semilla: ";
+    cin>>semilla;
+
+	uint64_t bits = semilla & ((1ULL << nbits) - 1);
+    for (int i=0; i<n; i++) 
+	{
+        uint64_t nuevo_bit = ((bits >> (nbits - longitud)) ^ bits) & 1;
+        bits = ((bits << 1) | nuevo_bit) & ((1ULL << nbits) - 1);
+        listaAleatorios[i] = round((static_cast<double>(bits) / ((1ULL << nbits) - 1)) * cifras) / cifras;
+		cout<<"Numero #"<<i+1<<" generado: "<<listaAleatorios[i]<<endl;
+    }
+	archivo(listaAleatorios, 0, n);
 }
 
 void parte_central()
@@ -156,14 +176,15 @@ void parte_central()
     	{
     		if(counter % 2 == 0)
 			{
-				numero = numero.substr(1, numero.length() - 1);
+				numero = numero.substr(1);
 			}
 			else
 			{
-				numero = numero.substr(0, numero.length() - 2);
+				numero = numero.substr(0, numero.length() - 1);
 			}
 			counter++;
 		}
+		counter = 1;
 		listaAleatorios[i] = stod(numero) / cifras;
 		cout<<"Numero #"<<i+1<<" generado: "<<listaAleatorios[i]<<endl;
 		semilla = stod(numero);
@@ -175,7 +196,7 @@ void archivo(double numeros[], int iniciales, int n)
 {
 	int k=0;
 	ofstream archivo("Numeros_Generados.csv");
-	if (archivo.fail())
+	if(archivo.fail())
 	{
 		cout<<"Error al abrir Numeros_Generados.csv"<<endl;
 		exit(0);
@@ -200,7 +221,7 @@ void cambiar_cifras()
 	cout<<"El numero actual de cifras maxima que cuentan los generadores es de: "<<cifras_significativas<<endl;
 	cout<<"Que numero de cifras desea para futuras generaciones?: ";
 	cin>>cifras_significativas;
-	cout<<"El cambio se realizo correctamente!";
+	cout<<"El cambio se realizo correctamente!"<<endl;
 	system("pause");
 }
 

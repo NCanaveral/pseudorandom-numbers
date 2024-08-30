@@ -12,11 +12,11 @@ void menuPruebas()
 	{
 		system("cls");
 		cout<<"MENU PARA PRUEBAS ESTADISTICAS SOBRE CONJUNTOS DE NUMEROS PSEUDOALEATORIOS"<<endl;
-		cout<<"1. Metodo 1"<<endl;
-		cout<<"2. Metodo 2"<<endl;
-		cout<<"3. Metodo 3"<<endl;
-		cout<<"4. Metodo 4"<<endl;
-		cout<<"5. Metodo 5"<<endl;
+		cout<<"1. Prueba de los promedios"<<endl;
+		cout<<"2. Prueba de frecuencias"<<endl;
+		cout<<"3. Prueba de la distancia"<<endl;
+		cout<<"4. Prueba de series"<<endl;
+		cout<<"5. Prueba de kolgomorov-smirnov"<<endl;
 		cout<<"0. Salir"<<endl;
 		cout<<"Seleccione el metodo a realizar: ";
 		cin>>opcion;
