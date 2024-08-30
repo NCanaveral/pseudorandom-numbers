@@ -6,4 +6,8 @@ Para ejecutar el programa abra una terminal y escribe "make" luego "./pseudorand
 
 El compilador predeterminado usado por el makefile es g++, si lo tienes el comando make que mencioné debería correr bien, si usas otro compilador puedes sobreescribir la variable usada por el makefile, ejemplo si usas clang++ puedes escribir "make CXX=clang++".
 
-El ejecutable y el archivo de salida .csv serán generados en el directorio raíz del proyecto.
+El ejecutable, los objetos compilados y el archivo de salida .csv serán generados en el directorio raíz del proyecto.
+
+Para eliminar todos los archivos generadores por el compilador necesarios para crear el programa escribe el comando "make clean", se puede abrir en cualquier terminal
+como powershell o cmd.exe deberia funcionar de la misma forma tanto para compilar y eliminar, este comando elimina todos los objetos, la carpeta en la que estos se guardan
+y el ejecutable 
