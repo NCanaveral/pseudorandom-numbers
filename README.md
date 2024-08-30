@@ -1,13 +1,9 @@
-This is a work in progress, language used is spanish
+Esto es un proyecto en progreso.
 
-this software needs a c++ compiler that supports versions +11
-for vscode users i included a settings.json because the IDE doesnt allow to create arrays without a specific constant value
-the setting.json avoids that problem
+Este software necesita un compilador de c++ que soporte versiones +11, para usuarios de vscode, incluí un settings.json porque el IDE no permite crear arreglos sin un valor constante específico, el settings.json evita ese problema visual.
 
-to run the program open a terminal and write "make" then "./pseudorandom_numbers"
-you dont need to have installed the extension "Makefile tools" developed by microsoft but its useful to edit the makefile file
+Para ejecutar el programa abra una terminal y escribe "make" luego "./pseudorandom_numbers", no necesitas tener instalada la extensión "Makefile tools" desarrollada por microsoft pero es útil para editar el archivo makefile.
 
-the default compiler used by the makefile is g++, if you have it the make command i mentioned should run as normal
-if you use another compiler you can overwritte the variable used by the makefile, example if you use clang++ you can writte "make CXX=clang++"
+El compilador predeterminado usado por el makefile es g++, si lo tienes el comando make que mencioné debería correr bien, si usas otro compilador puedes sobreescribir la variable usada por el makefile, ejemplo si usas clang++ puedes escribir "make CXX=clang++".
 
-the executable and output file will be generated on the root directory of the project 
+El ejecutable y el archivo de salida .csv serán generados en el directorio raíz del proyecto.
