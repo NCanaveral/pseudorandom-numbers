@@ -149,7 +149,7 @@ void tausworthe()
     cout<<"Ingrese la semilla: ";
     cin>>semilla;
 
-	uint64_t bits = semilla & ((1ULL << nbits) - 1);
+	uint64_t bits = semilla & ((1ULL << nbits) - 1); 
     for (int i=0; i<n; i++) 
 	{
         uint64_t nuevo_bit = ((bits >> (nbits - longitud)) ^ bits) & 1;
