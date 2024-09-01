@@ -2,8 +2,9 @@
 #define PRUEBAS_H
 
 #include <iostream>
+#include <vector>
 using namespace std;
 
-void menuPruebas();
+void menuPruebas(vector<double> numeros, int n);
 
 #endif

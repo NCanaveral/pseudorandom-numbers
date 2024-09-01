@@ -4,6 +4,7 @@
 #include <fstream>
 #include <cmath>
 #include <cstdint>
+#include "../encabezados/Limpieza.h"
 using namespace std;
 
 void congruencial_aditivo();
@@ -20,7 +21,7 @@ void menuGeneradores()
 	int opcion;
 	do
 	{
-		system("cls");
+		system(limpiarConsola.c_str());
 		cout<<"GENERADOR DE NUMEROS PSEUDOALEATORIOS"<<endl;
 		cout<<"1. Congruencial aditivo"<<endl;
 		cout<<"2. Congruencial multiplicativo"<<endl;
@@ -31,7 +32,7 @@ void menuGeneradores()
 		cout<<"0. Salir"<<endl;
 		cout<<"Seleccione el metodo a realizar: ";
 		cin>>opcion;
-		system("cls");
+		system(limpiarConsola.c_str());
 		switch(opcion)
 		{
 			case 1:
@@ -201,7 +202,6 @@ void archivo(double numeros[], int iniciales, int n)
 		cout<<"Error al abrir Numeros_Generados.csv"<<endl;
 		exit(0);
 	}
-	archivo<<"Numeros generados: "<<n<<endl;
 	for(int i=iniciales; i<n; i++)
 	{
 		archivo<<numeros[i]<<";";
@@ -213,7 +213,7 @@ void archivo(double numeros[], int iniciales, int n)
 	}
 	cout<<"Los numeros generados fueron guardados en Numeros_Generados.csv"<<endl;
 	archivo.close();
-	system("pause");
+	system(pausarConsola.c_str());
 }
 
 void cambiar_cifras()
@@ -222,6 +222,6 @@ void cambiar_cifras()
 	cout<<"Que numero de cifras desea para futuras generaciones?: ";
 	cin>>cifras_significativas;
 	cout<<"El cambio se realizo correctamente!"<<endl;
-	system("pause");
+	system(pausarConsola.c_str());
 }
 

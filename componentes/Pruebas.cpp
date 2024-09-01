@@ -1,16 +1,18 @@
 #include <iostream>
 #include <iomanip>
+#include <vector>
 #include <string>
 #include <fstream>
 #include <cmath>
+#include "../encabezados/Limpieza.h"
 using namespace std;
 
-void menuPruebas()
+void menuPruebas(vector<double> numeros, int n)
 {
 	int opcion;
 	do
 	{
-		system("cls");
+		system(limpiarConsola.c_str());
 		cout<<"MENU PARA PRUEBAS ESTADISTICAS SOBRE CONJUNTOS DE NUMEROS PSEUDOALEATORIOS"<<endl;
 		cout<<"1. Prueba de los promedios"<<endl;
 		cout<<"2. Prueba de frecuencias"<<endl;
@@ -35,5 +37,5 @@ void menuPruebas()
 			case 0: break;
 			default: cout<<"Opcion Seleccionada es Incorrecta"<<endl;
 		}
-	}while(opcion != 0);	
+	}while(opcion != 0);
 }

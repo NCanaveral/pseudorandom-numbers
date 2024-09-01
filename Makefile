@@ -3,6 +3,7 @@ CXXFLAGS = -Wall -g -std=c++11
 BUILD_DIR = constructores
 HEADERS_DIR = encabezados
 COMPONENTS_DIR = componentes
+OBJECTS = $(BUILD_DIR)/main.o $(BUILD_DIR)/Generadores.o $(BUILD_DIR)/Pruebas.o $(BUILD_DIR)/Limpieza.o $(BUILD_DIR)/Archivo.o
 
 ifeq ($(OS),Windows_NT)
 	MKDIR = powershell -Command "if (!(Test-Path '$(BUILD_DIR)')) { New-Item -ItemType Directory -Path '$(BUILD_DIR)' }"
@@ -16,17 +17,23 @@ else
 	REXE = rm -f pseudorandom_numbers.exe
 endif
 
-pseudorandom_numbers: $(BUILD_DIR)/main.o $(BUILD_DIR)/Generadores.o $(BUILD_DIR)/Pruebas.o
-	$(CXX) $(CXXFLAGS) $(BUILD_DIR)/main.o $(BUILD_DIR)/Generadores.o $(BUILD_DIR)/Pruebas.o -o pseudorandom_numbers
+pseudorandom_numbers: $(OBJECTS)
+	$(CXX) $(CXXFLAGS) $(OBJECTS) -o pseudorandom_numbers
 
-$(BUILD_DIR)/main.o: main.cpp $(HEADERS_DIR)/Generadores.h $(HEADERS_DIR)/Pruebas.h | $(BUILD_DIR)
+$(BUILD_DIR)/main.o: main.cpp $(HEADERS_DIR)/Generadores.h $(HEADERS_DIR)/Archivo.h $(HEADERS_DIR)/Limpieza.h | $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) -c main.cpp -o $(BUILD_DIR)/main.o
 
-$(BUILD_DIR)/Generadores.o: $(COMPONENTS_DIR)/Generadores.cpp $(HEADERS_DIR)/Generadores.h | $(BUILD_DIR)
+$(BUILD_DIR)/Generadores.o: $(COMPONENTS_DIR)/Generadores.cpp $(HEADERS_DIR)/Generadores.h $(HEADERS_DIR)/Limpieza.h | $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) -c $(COMPONENTS_DIR)/Generadores.cpp -o $(BUILD_DIR)/Generadores.o
 
-$(BUILD_DIR)/Pruebas.o: $(COMPONENTS_DIR)/Pruebas.cpp $(HEADERS_DIR)/Pruebas.h | $(BUILD_DIR)
+$(BUILD_DIR)/Pruebas.o: $(COMPONENTS_DIR)/Pruebas.cpp $(HEADERS_DIR)/Pruebas.h $(HEADERS_DIR)/Limpieza.h | $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) -c $(COMPONENTS_DIR)/Pruebas.cpp -o $(BUILD_DIR)/Pruebas.o
+
+$(BUILD_DIR)/Archivo.o: $(COMPONENTS_DIR)/Archivo.cpp $(HEADERS_DIR)/Archivo.h $(HEADERS_DIR)/Limpieza.h $(HEADERS_DIR)/Pruebas.h | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -c $(COMPONENTS_DIR)/Archivo.cpp -o $(BUILD_DIR)/Archivo.o
+
+$(BUILD_DIR)/Limpieza.o: $(COMPONENTS_DIR)/Limpieza.cpp $(HEADERS_DIR)/Limpieza.h | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -c $(COMPONENTS_DIR)/Limpieza.cpp -o $(BUILD_DIR)/Limpieza.o
 
 $(BUILD_DIR):
 	$(MKDIR)

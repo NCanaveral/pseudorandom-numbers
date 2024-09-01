@@ -1,16 +1,18 @@
 #include <iostream>
 #include "encabezados/Generadores.h"
-#include "encabezados/Pruebas.h"
+#include "encabezados/Archivo.h"
+#include "encabezados/Limpieza.h"
 using namespace std;
 
 void creditos();
 
 int main()
 {
+	verificarSO();
     int opcion;
 	do
 	{
-		system("cls");
+		system(limpiarConsola.c_str());
 		cout<<"GENERADORES DE NUMEROS PSEUDOALEATORIOS Y PRUEBAS ESTADISTICAS"<<endl;
 		cout<<"1. Generar numeros pseudoaleatorios"<<endl;
 		cout<<"2. Realizar pruebas sobre un conjunto de numeros"<<endl;
@@ -18,19 +20,20 @@ int main()
 		cout<<"0. Salir"<<endl;
 		cout<<"Seleccione una opcion: ";
 		cin>>opcion;
-		system("cls");
 		switch(opcion)
 		{
 			case 1:
 				menuGeneradores();
 				break;
 			case 2:
-				menuPruebas();
+				obtenerDatos();
 				break;
 			case 3:
 				creditos();
 				break;
-			case 0: break;
+			case 0: 
+				system("cls");
+				break;
 			default: cout<<"Opcion Seleccionada es Incorrecta"<<endl;
 		}
 	}while(opcion != 0);
@@ -38,9 +41,9 @@ int main()
 
 void creditos()
 {
-	system("cls");
+	system(limpiarConsola.c_str());
     cout<<"ESTE CODIGO FUE REALIZADO POR LOS ESTUDIANTES DE INGENIERIA DE SISTEMAS"<<endl;
     cout<<"NESTOR CAÑAVERAL - LOPEZ FONTALVO"<<endl;
     cout<<"DE LA UNIVERSIDAD DE CARTAGENA PARA EL CURSO DE SIMULACION DIGITAL"<<endl;
-    system("pause");
+    system(pausarConsola.c_str());
 }
