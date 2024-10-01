@@ -74,7 +74,9 @@ void obtenerDatos()
 void leer(int n)
 {
     ifstream archivo;
+    int salir = 0;
     system(limpiarConsola.c_str());
+    fflush(stdin);
     if(n == 1)
     {
         string ruta;
@@ -84,10 +86,16 @@ void leer(int n)
             getline(cin, ruta);
             fflush(stdin);
             archivo.open(ruta);
+            if(ruta == "0")
+            {
+                salir = 1;
+                break;
+            }
             if (!archivo.is_open()) 
             {
                 cout<<"No se pudo abrir el archivo en la ruta proporcionada: "<<ruta<<endl;
                 cout<<"Intente nuevamente"<<endl;
+                cout<<"Si desea salir del programa ingrese 0 en la opcion"<<endl;
             }
         }while(!archivo.is_open());
     }
@@ -115,7 +123,10 @@ void leer(int n)
         }
     }
     archivo.close();
-    cout<<"Extraccion de datos terminada"<<endl;
-    system(pausarConsola.c_str());
-    menuPruebas(numeros, counter);
+    if(salir != 1)
+    {
+        cout<<"Extraccion de datos terminada"<<endl;
+        system(pausarConsola.c_str());
+        menuPruebas(numeros, counter);
+    }
 }

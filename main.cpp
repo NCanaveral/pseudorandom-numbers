@@ -32,7 +32,7 @@ int main()
 				creditos();
 				break;
 			case 0: 
-				system("cls");
+				system(limpiarConsola.c_str());
 				break;
 			default: cout<<"Opcion Seleccionada es Incorrecta"<<endl;
 		}
@@ -42,8 +42,8 @@ int main()
 void creditos()
 {
 	system(limpiarConsola.c_str());
-    cout<<"ESTE CODIGO FUE REALIZADO POR LOS ESTUDIANTES DE INGENIERIA DE SISTEMAS"<<endl;
-    cout<<"NESTOR CAÑAVERAL - LOPEZ FONTALVO"<<endl;
+    cout<<"ESTE CODIGO FUE REALIZADO POR EL ESTUDIANTE DE INGENIERIA DE SISTEMAS"<<endl;
+    cout<<"NESTOR FABIAN CANAVERAL VELASQUEZ"<<endl;
     cout<<"DE LA UNIVERSIDAD DE CARTAGENA PARA EL CURSO DE SIMULACION DIGITAL"<<endl;
     system(pausarConsola.c_str());
 }

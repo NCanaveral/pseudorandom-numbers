@@ -3,7 +3,9 @@
 #include <string>
 #include <fstream>
 #include <cmath>
+#include <numeric>
 #include <cstdint>
+#include <set>
 #include "../encabezados/Limpieza.h"
 using namespace std;
 
@@ -14,6 +16,12 @@ void tausworthe();
 void parte_central();
 void archivo(double numeros[], int iniciales, int n);
 void cambiar_cifras();
+
+void warningsCongruencial_aditivo(int k, int modulo, int numeros[]);
+void warningsCongruencial_multiplicativo(int multi, int modulo, int semilla);
+void warningsCongruencial_mixto(int multi, int aditi, int modulo, int semilla);
+bool pareceCompleto(int n, int modulo, int repetido);
+
 int cifras_significativas = 3;
 
 void menuGeneradores()
@@ -61,7 +69,7 @@ void menuGeneradores()
 
 void congruencial_aditivo()
 {
-	int k, n, modulo;
+	int k, n, modulo, primerRepetidoEn = -1;
 	double cifras = pow(10, cifras_significativas);
 	cout<<"Ingrese la cantidad de numeros a generar: ";
     cin>>n;
@@ -84,13 +92,21 @@ void congruencial_aditivo()
     	listaAleatorios[i] = round(((double) numeros[k] / (modulo-1)) * cifras) / cifras;
 		k++;
 		cout<<"Numero #"<<i+1<<" generado: "<<listaAleatorios[i]<<endl;
+		if(listaAleatorios[0] == listaAleatorios[i] && i > 0 && primerRepetidoEn == -1)
+		{
+			primerRepetidoEn = i;
+		}
+	}
+	if(pareceCompleto(n, modulo, primerRepetidoEn))
+	{
+		warningsCongruencial_aditivo(k, modulo, numeros);
 	}
 	archivo(listaAleatorios, 0, n);
 }
 
 void congruencial_multiplicativo()
 {
-	int multi, modulo, n, semilla;
+	int multi, modulo, n, semilla, primerRepetidoEn = -1;
 	double cifras = pow(10, cifras_significativas);
 	cout<<"Ingrese la cantidad de numeros a generar: ";
     cin>>n;
@@ -107,13 +123,21 @@ void congruencial_multiplicativo()
     	semilla = (semilla * multi) % modulo;
     	listaAleatorios[i] = round(((double) semilla / (modulo-1)) * cifras) / cifras;
 		cout<<"Numero #"<<i+1<<" generado: "<<listaAleatorios[i]<<endl;
+		if(listaAleatorios[0] == listaAleatorios[i] && i > 0 && primerRepetidoEn == -1)
+		{
+			primerRepetidoEn = i;
+		}
+	}
+	if(pareceCompleto(n, modulo, primerRepetidoEn))
+	{
+		warningsCongruencial_multiplicativo(multi, modulo, semilla);
 	}
 	archivo(listaAleatorios, 0, n);
 }
 
 void congruencial_mixto()
 {
-	int multi, aditi, modulo, n, semilla;
+	int multi, aditi, modulo, n, semilla, primerRepetidoEn = -1;
 	double cifras = pow(10, cifras_significativas);
 	cout<<"Ingrese la cantidad de numeros a generar: ";
     cin>>n;
@@ -132,6 +156,14 @@ void congruencial_mixto()
     	semilla = ((semilla * multi) + aditi) % modulo;
     	listaAleatorios[i] = round(((double) semilla / modulo) * cifras) / cifras;
 		cout<<"Numero #"<<i+1<<" generado: "<<listaAleatorios[i]<<endl;
+		if(listaAleatorios[0] == listaAleatorios[i] && i > 0 && primerRepetidoEn == -1)
+		{
+			primerRepetidoEn = i;
+		}
+	}
+	if(pareceCompleto(n, modulo, primerRepetidoEn))
+	{
+		warningsCongruencial_mixto(multi, aditi, modulo, semilla);
 	}
 	archivo(listaAleatorios, 0, n);
 }
@@ -225,3 +257,161 @@ void cambiar_cifras()
 	system(pausarConsola.c_str());
 }
 
+bool pareceCompleto(int n, int modulo, int repetido)
+{
+	if(repetido == -1 && n > modulo)
+	{
+		cout<<"Los numeros generados parecen poseer periodo completo!"<<endl;
+		return false;
+	}else if(repetido == -1 && n < modulo)
+	{
+		cout<<"No se puede confirmar ni descartar que la muestra posea periodo completo"<<endl;
+		return false;
+	}
+	else
+	{
+		if (modulo - 3 <= repetido && modulo + 3 >= repetido) 
+		{
+			cout<<"Los numeros generados parecen poseer periodo completo!"<<endl;
+			return false;
+		} 
+		else 
+		{
+			cout<<"Los numeros generados parece que no cumplen periodo completo"<<endl;
+			cout<<"Tenemos algunas recomendaciones: "<<endl;
+			return true;
+		}
+	}
+}
+
+void warningsCongruencial_mixto(int multi, int aditi, int modulo, int semilla)
+{
+	/*
+	cout << "Revisando los parámetros para el método congruencial mixto:" << endl;
+    if (modulo <= 0) {
+        cout << "- El valor del módulo (m) debe ser mayor que 0. Considera cambiar el módulo." << endl;
+    } else {
+        cout << "- El módulo (m) es válido: " << modulo << endl;
+    }
+    if (gcd(aditi, modulo) != 1) {
+        cout << "- La constante aditiva (c) y el módulo (m) no son coprimos. Para garantizar un periodo completo, cambia c a un valor que sea coprimo con " << modulo << "." << endl;
+    } else {
+        cout << "- La constante aditiva (c) es válida para garantizar un periodo completo." << endl;
+    }
+    if (modulo % 4 == 0 && (multi - 1) % 4 != 0) {
+        cout << "- Como el módulo (m) es divisible por 4, la constante multiplicativa (a) debe cumplir a - 1 divisible por 4. Considera cambiar a a un valor que cumpla esta condición." << endl;
+    } else {
+        cout << "- La constante multiplicativa (a) es válida para garantizar un periodo completo bajo la condición de divisibilidad." << endl;
+    }
+    int powerOfTwo = 1;
+    while (powerOfTwo < modulo) {
+        powerOfTwo *= 2;
+    }
+    if (powerOfTwo == modulo) {
+        if ((multi & (multi - 1)) != 0) {
+            cout << "- Como el módulo (m) es potencia de 2, la constante multiplicativa (a) debería ser potencia de 2. Considera cambiar a a una potencia de 2." << endl;
+        } else {
+            cout << "- La constante multiplicativa (a) es válida como potencia de 2." << endl;
+        }
+    }
+    if (semilla < 0 || semilla >= modulo) {
+        cout << "- La semilla (X0) debe estar en el rango [0, m). Considera cambiar la semilla para que esté en este rango." << endl;
+    } else {
+        cout << "- La semilla (X0) está en un rango válido." << endl;
+    }
+    cout << "Si sigues estas recomendaciones, puedes mejorar la calidad de los números pseudoaleatorios generados." << endl;
+	*/
+	cout<<"intentare arreglar esto despues"<<endl;
+}
+
+void warningsCongruencial_multiplicativo(int multi, int modulo, int semilla)
+{
+	/*
+	cout << "Revisando los parámetros para el método congruencial multiplicativo:" << endl;
+    if (modulo <= 0) {
+        cout << "- El valor del módulo (m) debe ser mayor que 0. Considera cambiar el módulo." << endl;
+    } else {
+        cout << "- El módulo (m) es válido: " << modulo << endl;
+    }
+    if ((modulo & (modulo - 1)) == 0) {
+        if ((multi - 3) % 8 != 0) {
+            cout << "- Como el módulo (m) es potencia de 2, la constante multiplicativa (a) debería ser de la forma 3 + 8k. Considera cambiar a a un valor que cumpla esta condición." << endl;
+        } else {
+            cout << "- La constante multiplicativa (a) es válida para el módulo como potencia de 2." << endl;
+        }
+    }
+
+    bool isPrime = true;
+    if (modulo <= 1) {
+        isPrime = false;
+    } else {
+        for (int i = 2; i * i <= modulo; i++) {
+            if (modulo % i == 0) {
+                isPrime = false;
+                break;
+            }
+        }
+    }
+    
+    if (isPrime) {
+        cout << "- El módulo (m) es primo, considera seleccionar un 'a' que sea un generador primitivo para garantizar un periodo completo." << endl;
+    } else {
+        cout << "- El módulo (m) no es primo, por lo tanto, no se aplica la recomendación de generador primitivo." << endl;
+    }
+    if (semilla <= 0 || semilla >= modulo) {
+        cout << "- La semilla (X0) debe estar en el rango (0, m). Considera cambiar la semilla para que esté en este rango." << endl;
+    } else {
+        cout << "- La semilla (X0) está en un rango válido." << endl;
+    }
+    cout << "Si sigues estas recomendaciones, puedes mejorar la calidad de los números pseudoaleatorios generados." << endl;
+	*/
+	cout<<"intentare arreglar esto despues"<<endl;
+}
+
+void warningsCongruencial_aditivo(int k, int modulo, int numeros[])
+{
+	/*
+	cout << "Revisando los parámetros para el método congruencial aditivo:" << endl;
+    if (modulo <= 0) {
+        cout << "- El valor del módulo (m) debe ser mayor que 0. Considera cambiar el módulo." << endl;
+    } else {
+        cout << "- El módulo (m) es válido: " << modulo << endl;
+    }
+    if (k <= 0) {
+        cout << "- El valor de k (número de valores iniciales) debe ser mayor que 0. Considera cambiar k." << endl;
+    } else if (k > modulo) {
+        cout << "- El valor de k no debe ser mayor que el módulo (m). Considera reducir k." << endl;
+    } else {
+        cout << "- El valor de k es válido: " << k << endl;
+    }
+    bool allValid = true;
+    for (int i = 0; i < k; i++) {
+        if (numeros[i] < 0 || numeros[i] >= modulo) {
+            cout << "- El número inicial en la posición " << i << " (" << numeros[i] << ") no está en el rango [0, m). Considera cambiar este valor." << endl;
+            allValid = false;
+        }
+    }
+    if (allValid) {
+        cout << "- Todos los números iniciales están en un rango válido." << endl;
+    }
+    set<int> unique_numbers(numeros, numeros + k);
+    if (unique_numbers.size() != k) {
+        cout << "- Los números iniciales no deben ser iguales entre sí. Considera elegir valores diferentes para evitar ciclos cortos." << endl;
+    } else {
+        cout << "- Los números iniciales son únicos, lo cual es bueno para evitar ciclos cortos." << endl;
+    }
+
+    bool coprime = true;
+    for (int i = 0; i < k; i++) {
+        if (gcd(numeros[i], modulo) != 1) {
+            cout << "- El número inicial en la posición " << i << " (" << numeros[i] << ") no es coprimo con el módulo (m). Esto puede reducir el periodo. Considera cambiar este valor." << endl;
+            coprime = false;
+        }
+    }
+    if (coprime) {
+        cout << "- Los números iniciales son coprimos con el módulo, lo cual es ideal para garantizar un buen periodo." << endl;
+    }
+    cout << "Si sigues estas recomendaciones, puedes mejorar la calidad de los números pseudoaleatorios generados." << endl;
+	*/
+	cout<<"intentare arreglar esto despues"<<endl;
+}
