@@ -3,7 +3,7 @@ CXXFLAGS = -Wall -g -std=c++11
 BUILD_DIR = constructores
 HEADERS_DIR = encabezados
 COMPONENTS_DIR = componentes
-OBJECTS = $(BUILD_DIR)/main.o $(BUILD_DIR)/Generadores.o $(BUILD_DIR)/Pruebas.o $(BUILD_DIR)/Limpieza.o $(BUILD_DIR)/Archivo.o
+OBJECTS = $(BUILD_DIR)/main.o $(BUILD_DIR)/Generadores.o $(BUILD_DIR)/Pruebas.o $(BUILD_DIR)/Limpieza.o $(BUILD_DIR)/Archivo.o $(BUILD_DIR)/Distribuciones.o
 
 ifeq ($(OS),Windows_NT)
 	MKDIR = powershell -Command "if (!(Test-Path '$(BUILD_DIR)')) { New-Item -ItemType Directory -Path '$(BUILD_DIR)' }"
@@ -34,6 +34,9 @@ $(BUILD_DIR)/Archivo.o: $(COMPONENTS_DIR)/Archivo.cpp $(HEADERS_DIR)/Archivo.h $
 
 $(BUILD_DIR)/Limpieza.o: $(COMPONENTS_DIR)/Limpieza.cpp $(HEADERS_DIR)/Limpieza.h | $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) -c $(COMPONENTS_DIR)/Limpieza.cpp -o $(BUILD_DIR)/Limpieza.o
+
+$(BUILD_DIR)/Distribuciones.o: $(COMPONENTS_DIR)/Distribuciones.cpp $(HEADERS_DIR)/Distribuciones.h $(HEADERS_DIR)/Limpieza.h | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -c $(COMPONENTS_DIR)/Distribuciones.cpp -o $(BUILD_DIR)/Distribuciones.o
 
 $(BUILD_DIR):
 	$(MKDIR)

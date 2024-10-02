@@ -2,6 +2,7 @@
 #include "encabezados/Generadores.h"
 #include "encabezados/Archivo.h"
 #include "encabezados/Limpieza.h"
+#include "encabezados/Distribuciones.h"
 using namespace std;
 
 void creditos();
@@ -16,7 +17,8 @@ int main()
 		cout<<"GENERADORES DE NUMEROS PSEUDOALEATORIOS Y PRUEBAS ESTADISTICAS"<<endl;
 		cout<<"1. Generar numeros pseudoaleatorios"<<endl;
 		cout<<"2. Realizar pruebas sobre un conjunto de numeros"<<endl;
-		cout<<"3. Creditos"<<endl;
+		cout<<"3. Generar numeros siguiendo una distribucion"<<endl;
+		cout<<"4. Creditos"<<endl;
 		cout<<"0. Salir"<<endl;
 		cout<<"Seleccione una opcion: ";
 		cin>>opcion;
@@ -29,6 +31,9 @@ int main()
 				obtenerDatos();
 				break;
 			case 3:
+				menuDistribuciones();
+				break;
+			case 4:
 				creditos();
 				break;
 			case 0: 
